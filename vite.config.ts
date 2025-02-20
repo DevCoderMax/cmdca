@@ -1,7 +1,7 @@
 import { defineConfig } from 'vite'
 
 export default defineConfig({
-  base: './',  // Isso fará com que o Vite use caminhos relativos
+  base: '/',  // Alterado para usar a raiz como base
   server: {
     port: 3090,
     host: '0.0.0.0'
@@ -10,5 +10,13 @@ export default defineConfig({
     port: 3090,
     host: '0.0.0.0',
     allowedHosts: ['max-cmdca-web.uvxtdw.easypanel.host']
+  },
+  build: {
+    rollupOptions: {
+      input: {
+        main: '/index.html',
+        dashboard: '/dashboard/index.html'
+      }
+    }
   }
 })
