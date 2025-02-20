@@ -8,6 +8,7 @@ export default defineConfig({
   },
   preview: {
     port: 3090,
-    host: '0.0.0.0'
+    host: '0.0.0.0',
+    allowedHosts: ['max-cmdca-web.uvxtdw.easypanel.host']
   }
 })
