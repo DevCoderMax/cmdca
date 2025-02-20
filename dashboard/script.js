@@ -1,5 +1,6 @@
 import { API_BASE_URL } from './config.js';
 import { initLeisTab } from './abas/leis/leis.js';
+import { initResolucoesTab } from './abas/resolucoes/resolucoes.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
     // Configuração do tema
@@ -62,7 +63,20 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Inicializa a funcionalidade da aba de leis
             initLeisTab();
-        } else if (tabId !== 'leis') {
+        } 
+        // Se for a aba de resoluções e ainda não foi carregada
+        else if (tabId === 'resolucoes' && !selectedContent.dataset.loaded) {
+            // Carrega o conteúdo HTML da aba de resoluções
+            const response = await fetch('abas/resolucoes/resolucoes.html');
+            const html = await response.text();
+            selectedContent.innerHTML = html;
+            selectedContent.dataset.loaded = 'true';
+            
+            // Inicializa a funcionalidade da aba de resoluções
+            initResolucoesTab();
+        }
+        // Se for outra aba
+        else if (tabId !== 'leis' && tabId !== 'resolucoes') {
             // Carrega o conteúdo das outras abas como antes
             loadTabContent(tabId);
         }
