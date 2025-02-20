@@ -50,7 +50,6 @@ export function initResolucoesTab() {
         
         const resolucaoId = document.getElementById('resolucaoId').value;
         const formData = {
-            id: resolucaoId || null,
             titulo: document.getElementById('titulo').value,
             tipo_conselho: document.getElementById('tipo_conselho').value,
             data_resolucao: document.getElementById('data_resolucao').value,

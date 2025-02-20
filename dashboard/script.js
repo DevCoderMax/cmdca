@@ -53,31 +53,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         selectedButton.classList.add('active');
         selectedContent.classList.add('active');
 
-        // Se for a aba de leis e ainda não foi carregada
-        if (tabId === 'leis' && !selectedContent.dataset.loaded) {
+        // Carrega o conteúdo baseado no tipo de aba
+        if (tabId === 'leis') {
             // Carrega o conteúdo HTML da aba de leis
             const response = await fetch('abas/leis/leis.html');
             const html = await response.text();
             selectedContent.innerHTML = html;
-            selectedContent.dataset.loaded = 'true';
             
             // Inicializa a funcionalidade da aba de leis
             initLeisTab();
         } 
-        // Se for a aba de resoluções e ainda não foi carregada
-        else if (tabId === 'resolucoes' && !selectedContent.dataset.loaded) {
+        else if (tabId === 'resolucoes') {
             // Carrega o conteúdo HTML da aba de resoluções
             const response = await fetch('abas/resolucoes/resolucoes.html');
             const html = await response.text();
             selectedContent.innerHTML = html;
-            selectedContent.dataset.loaded = 'true';
             
             // Inicializa a funcionalidade da aba de resoluções
             initResolucoesTab();
         }
-        // Se for outra aba
-        else if (tabId !== 'leis' && tabId !== 'resolucoes') {
-            // Carrega o conteúdo das outras abas como antes
+        else {
+            // Carrega o conteúdo das outras abas
             loadTabContent(tabId);
         }
     }
