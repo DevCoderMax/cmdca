@@ -35,40 +35,32 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateThemeIcon(newTheme);
     });
 
-    // Seleção de elementos
-    const tabButtons = document.querySelectorAll('.tab-button');
-    const tabContents = document.querySelectorAll('.tab-content');
-
     // Função para trocar de aba
     async function switchTab(tabId) {
-        // Remove classe active de todas as abas
-        tabButtons.forEach(button => button.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
-
-        // Adiciona classe active na aba selecionada
-        const selectedButton = document.querySelector(`[data-tab="${tabId}"]`);
-        const selectedContent = document.getElementById(tabId);
+        // Remove a classe active de todas as abas e botões
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.tab-button').forEach(button => button.classList.remove('active'));
         
-        selectedButton.classList.add('active');
-        selectedContent.classList.add('active');
+        // Adiciona a classe active na aba e botão selecionados
+        document.getElementById(tabId).classList.add('active');
+        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
 
-        // Se for a aba de leis e ainda não foi carregada
-        if (tabId === 'leis' && !selectedContent.dataset.loaded) {
-            // Carrega o conteúdo HTML da aba de leis
-            const response = await fetch('abas/leis/leis.html');
+        // Carrega o conteúdo específico da aba
+        if (tabId === 'leis') {
+            const leisSection = document.getElementById('leis');
+            // Carrega o HTML da aba de leis
+            const response = await fetch('/dashboard/abas/leis/leis.html');
             const html = await response.text();
-            selectedContent.innerHTML = html;
-            selectedContent.dataset.loaded = 'true';
-            
+            leisSection.innerHTML = html;
             // Inicializa a funcionalidade da aba de leis
             initLeisTab();
-        } else if (tabId !== 'leis') {
-            // Carrega o conteúdo das outras abas como antes
-            loadTabContent(tabId);
+        } else {
+            await loadTabContent(tabId);
         }
     }
 
     // Event listeners para os botões das abas
+    const tabButtons = document.querySelectorAll('.tab-button');
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
             const tabId = button.getAttribute('data-tab');

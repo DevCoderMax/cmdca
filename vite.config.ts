@@ -15,8 +15,9 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: '/index.html',
-        dashboard: '/dashboard/index.html'
+        dashboard: '/dashboard/dashboard.html'
       }
-    }
+    },
+    assetsInclude: ['**/*.html'] // Isso garante que arquivos HTML sejam incluídos como assets
   }
 })
