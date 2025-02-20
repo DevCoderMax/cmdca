@@ -50,6 +50,7 @@ export function initResolucoesTab() {
         
         const resolucaoId = document.getElementById('resolucaoId').value;
         const formData = {
+            id: resolucaoId || null,
             titulo: document.getElementById('titulo').value,
             tipo_conselho: document.getElementById('tipo_conselho').value,
             data_resolucao: document.getElementById('data_resolucao').value,
@@ -93,7 +94,7 @@ export function initResolucoesTab() {
                 throw new Error('Erro ao carregar dados');
             }
 
-            renderResolucoes(container, data);
+            renderResolucoes(container, data.resolucoes);
         } catch (error) {
             container.innerHTML = `<tr><td colspan="4" class="error">Erro ao carregar dados: ${error.message}</td></tr>`;
         }
@@ -103,7 +104,7 @@ export function initResolucoesTab() {
     function renderResolucoes(container, resolucoes) {
         container.innerHTML = '';
         
-        if (resolucoes.length === 0) {
+        if (!resolucoes || resolucoes.length === 0) {
             container.innerHTML = '<tr><td colspan="4" class="empty">Nenhuma resolução encontrada</td></tr>';
             return;
         }
@@ -111,9 +112,9 @@ export function initResolucoesTab() {
         resolucoes.forEach(resolucao => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${resolucao.titulo}</td>
-                <td>${resolucao.tipo_conselho}</td>
-                <td>${formatDate(resolucao.data_resolucao)}</td>
+                <td>${resolucao.titulo || '-'}</td>
+                <td>${resolucao.tipo_conselho || '-'}</td>
+                <td>${formatDate(resolucao.data_resolucao) || '-'}</td>
                 <td>
                     <div class="actions">
                         ${resolucao.link_resolucao ? `
@@ -151,16 +152,19 @@ export function initResolucoesTab() {
     window.editResolucao = async (id) => {
         try {
             const response = await fetch(`${API_BASE_URL}/resolucoes/${id}`);
-            const resolucao = await response.json();
+            const data = await response.json();
 
             if (!response.ok) {
                 throw new Error('Erro ao carregar resolução');
             }
 
+            // Pega a primeira resolução do array
+            const resolucao = data.resolucoes[0];
+
             document.getElementById('resolucaoId').value = resolucao.id;
-            document.getElementById('titulo').value = resolucao.titulo;
-            document.getElementById('tipo_conselho').value = resolucao.tipo_conselho;
-            document.getElementById('data_resolucao').value = resolucao.data_resolucao;
+            document.getElementById('titulo').value = resolucao.titulo || '';
+            document.getElementById('tipo_conselho').value = resolucao.tipo_conselho || '';
+            document.getElementById('data_resolucao').value = resolucao.data_resolucao || '';
             document.getElementById('link_resolucao').value = resolucao.link_resolucao || '';
 
             openModal('Editar Resolução');
@@ -194,7 +198,9 @@ export function initResolucoesTab() {
 
     // Função auxiliar para formatar datas
     function formatDate(dateString) {
+        if (!dateString) return '-';
         const date = new Date(dateString);
+        if (isNaN(date.getTime())) return '-';
         return date.toLocaleDateString('pt-BR');
     }
 
