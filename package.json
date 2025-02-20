@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "start": "vite preview --port 3090 --host"
+    "start": "vite preview"
   },
   "devDependencies": {
     "typescript": "~5.7.2",
