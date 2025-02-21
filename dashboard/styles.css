@@ -266,6 +266,57 @@ body {
     transform: scale(0.95);
 }
 
+/* Estilos específicos para a tabela de Ofícios */
+#oficiosTable th:nth-child(1),
+#oficiosTable td:nth-child(1) {
+    width: 120px;
+    min-width: 120px;
+}
+
+#oficiosTable th:nth-child(2),
+#oficiosTable td:nth-child(2) {
+    width: 200px;
+    min-width: 200px;
+}
+
+#oficiosTable th:nth-child(3),
+#oficiosTable td:nth-child(3) {
+    width: auto;
+    min-width: 250px;
+}
+
+#oficiosTable th:nth-child(4),
+#oficiosTable td:nth-child(4) {
+    width: 100px;
+    min-width: 100px;
+}
+
+#oficiosTable th:nth-child(5),
+#oficiosTable td:nth-child(5) {
+    width: 100px;
+    min-width: 100px;
+}
+
+#oficiosTable th:nth-child(6),
+#oficiosTable td:nth-child(6) {
+    width: 100px;
+    min-width: 100px;
+}
+
+/* Ajuste para o texto na coluna de descrição */
+#oficiosTable td:nth-child(3) {
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+/* Manter os botões de ação alinhados */
+#oficiosTable .actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-start;
+}
+
 /* Modal styles */
 .modal {
     display: none;
