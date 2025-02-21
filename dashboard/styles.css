@@ -317,6 +317,76 @@ body {
     justify-content: flex-start;
 }
 
+/* Estilos responsivos para mobile */
+@media screen and (max-width: 768px) {
+    .desktop-only {
+        display: none;
+    }
+
+    .modern-table {
+        border: 0;
+    }
+
+    .modern-table tr {
+        margin-bottom: 1rem;
+        display: block;
+        border: 1px solid var(--border-color);
+        border-radius: var(--border-radius);
+        padding: 1rem;
+        background-color: var(--card-background);
+    }
+
+    .modern-table td {
+        display: block;
+        text-align: left;
+        padding: 0.5rem 0;
+        border-bottom: none;
+    }
+
+    .modern-table td:last-child {
+        border-bottom: none;
+    }
+
+    .modern-table td::before {
+        content: attr(data-label);
+        font-weight: bold;
+        display: block;
+        margin-bottom: 0.3rem;
+        color: var(--primary-color);
+    }
+
+    /* Ajustes específicos para a tabela de Ofícios no mobile */
+    #oficiosTable td {
+        width: 100% !important;
+        min-width: 100% !important;
+    }
+
+    #oficiosTable td[data-label="Descrição"] {
+        margin: 0.5rem 0;
+        padding: 0.5rem 0;
+    }
+
+    #oficiosTable .actions {
+        margin-top: 1rem;
+        justify-content: flex-start;
+    }
+
+    /* Ajuste para os botões de ação no mobile */
+    #oficiosTable .actions button {
+        padding: 8px;
+    }
+
+    #oficiosTable .actions button svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Espaçamento entre os cards no mobile */
+    #oficiosTable tbody tr + tr {
+        margin-top: 1rem;
+    }
+}
+
 /* Modal styles */
 .modal {
     display: none;

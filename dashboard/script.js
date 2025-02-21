@@ -754,14 +754,14 @@ async function carregarOficios() {
         oficios.forEach(oficio => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${oficio.NumOficio}</td>
-                <td>${oficio.titulo}</td>
-                <td>${oficio.description}</td>
-                <td>${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
-                <td>
+                <td data-label="Número">${oficio.NumOficio}</td>
+                <td data-label="Título">${oficio.titulo}</td>
+                <td data-label="Descrição">${oficio.description}</td>
+                <td data-label="Data">${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
+                <td data-label="Link">
                     ${oficio.link ? `<a href="${oficio.link}" target="_blank" class="table-link">Visualizar</a>` : '-'}
                 </td>
-                <td class="actions">
+                <td data-label="Ações" class="actions">
                     <button class="edit-btn oficio-edit" data-id="${oficio.id}" title="Editar">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
