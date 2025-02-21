@@ -1,4 +1,4 @@
-const CONFIG_VERSION = '1.0.0';
+const CONFIG_VERSION = '1.0.1';
 const API_BASE_URL = 'https://max-cmdca-api.uvxtdw.easypanel.host';
 
 // Função para forçar recarregamento do cache

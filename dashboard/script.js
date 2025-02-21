@@ -3,8 +3,32 @@ import { API_BASE_URL, CONFIG_VERSION, checkConfigVersion } from './config.js';
 // Verificar atualizações de configuração
 if (checkConfigVersion()) {
     console.log('Nova versão de configuração detectada:', CONFIG_VERSION);
-    window.location.reload(true);
+    // Força recarregamento ignorando cache
+    window.location.href = window.location.href.split('?')[0] + '?v=' + CONFIG_VERSION;
 }
+
+// Função para forçar atualização de recursos
+function forceResourceUpdate() {
+    const links = document.getElementsByTagName('link');
+    const scripts = document.getElementsByTagName('script');
+    
+    // Atualiza links (CSS)
+    for (let link of links) {
+        if (link.rel === 'stylesheet' && link.href.includes('styles.css')) {
+            link.href = link.href.split('?')[0] + '?v=' + CONFIG_VERSION;
+        }
+    }
+    
+    // Atualiza scripts
+    for (let script of scripts) {
+        if (script.src && !script.src.includes('http')) {
+            script.src = script.src.split('?')[0] + '?v=' + CONFIG_VERSION;
+        }
+    }
+}
+
+// Executa atualização de recursos quando a página carrega
+document.addEventListener('DOMContentLoaded', forceResourceUpdate);
 
 // Configuração do tema
 document.addEventListener('DOMContentLoaded', () => {
