@@ -1,4 +1,10 @@
-import { API_BASE_URL } from './config.js';
+import { API_BASE_URL, CONFIG_VERSION, checkConfigVersion } from './config.js';
+
+// Verificar atualizações de configuração
+if (checkConfigVersion()) {
+    console.log('Nova versão de configuração detectada:', CONFIG_VERSION);
+    window.location.reload(true);
+}
 
 // Configuração do tema
 document.addEventListener('DOMContentLoaded', () => {
