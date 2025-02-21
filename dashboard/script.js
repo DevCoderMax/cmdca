@@ -757,7 +757,7 @@ async function carregarOficios() {
                 <td data-label="Número">${oficio.NumOficio}</td>
                 <td data-label="Título">${oficio.titulo}</td>
                 <td data-label="Descrição">${oficio.description}</td>
-                <td data-label="Data">${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
+                <td data-label="Data">${new Date(oficio.data + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
                 <td data-label="Link">
                     ${oficio.link ? `<a href="${oficio.link}" target="_blank" class="table-link">Visualizar</a>` : '-'}
                 </td>
