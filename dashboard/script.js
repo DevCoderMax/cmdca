@@ -65,6 +65,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicializa a funcionalidade das resoluções
     initResolucoes();
+
+    // Inicializa a funcionalidade dos ofícios
+    initOficios();
 });
 
 // Funções para gerenciamento das leis
@@ -708,4 +711,236 @@ function closeAddResolucaoModal() {
 function closeEditResolucaoModal() {
     document.getElementById('editResolucaoModal').classList.remove('active');
     document.getElementById('editResolucaoForm').reset();
+}
+
+// Função para inicializar a funcionalidade dos ofícios
+function initOficios() {
+    // Carregar ofícios ao iniciar
+    carregarOficios();
+
+    // Configurar modal de adicionar
+    const addOficioBtn = document.getElementById('addOficioBtn');
+    const addOficioModal = document.getElementById('addOficioModal');
+    const addOficioForm = document.getElementById('addOficioForm');
+
+    if (addOficioBtn) {
+        addOficioBtn.addEventListener('click', () => {
+            addOficioModal.classList.add('active');
+        });
+    }
+
+    if (addOficioForm) {
+        addOficioForm.addEventListener('submit', handleAddOficioSubmit);
+    }
+
+    // Configurar fechamento do modal
+    const closeButtons = addOficioModal.querySelectorAll('.modal-close, .btn-cancel');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', closeAddOficioModal);
+    });
+}
+
+// Função para carregar ofícios
+async function carregarOficios() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/oficios`);
+        const data = await response.json();
+        const tbody = document.querySelector('#oficiosTable tbody');
+        tbody.innerHTML = '';
+
+        // Verifica se data é um array (resposta direta) ou se está dentro de uma propriedade
+        const oficios = Array.isArray(data) ? data : (data.oficios || []);
+
+        oficios.forEach(oficio => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${oficio.NumOficio}</td>
+                <td>${oficio.titulo}</td>
+                <td>${oficio.description}</td>
+                <td>${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
+                <td>
+                    ${oficio.link ? `<a href="${oficio.link}" target="_blank" class="table-link">Visualizar</a>` : '-'}
+                </td>
+                <td class="actions">
+                    <button class="edit-btn oficio-edit" data-id="${oficio.id}" title="Editar">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                        </svg>
+                    </button>
+                    <button class="delete-btn oficio-delete" data-id="${oficio.id}" title="Excluir">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                            <path d="M3 6h18"></path>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"></path>
+                            <path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                    </button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+
+        setupOficioEventListeners();
+    } catch (error) {
+        console.error('Erro ao carregar ofícios:', error);
+        alert('Erro ao carregar os ofícios');
+    }
+}
+
+// Configurar event listeners para ofícios
+function setupOficioEventListeners() {
+    document.querySelectorAll('.oficio-delete').forEach(btn => {
+        btn.addEventListener('click', handleDeleteOficio);
+    });
+
+    document.querySelectorAll('.oficio-edit').forEach(btn => {
+        btn.addEventListener('click', handleEditOficio);
+    });
+}
+
+// Função para lidar com o submit do formulário de adicionar ofício
+async function handleAddOficioSubmit(e) {
+    e.preventDefault();
+    
+    const oficioData = {
+        NumOficio: document.getElementById('addNumOficio').value,
+        titulo: document.getElementById('addTituloOficio').value,
+        description: document.getElementById('addDescriptionOficio').value,
+        data: document.getElementById('addDataOficio').value,
+        link: document.getElementById('addLinkOficio').value || null
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/oficios`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oficioData)
+        });
+
+        if (response.ok) {
+            closeAddOficioModal();
+            carregarOficios();
+            alert('Ofício adicionado com sucesso!');
+        } else {
+            throw new Error('Erro ao adicionar ofício');
+        }
+    } catch (error) {
+        console.error('Erro ao adicionar ofício:', error);
+        alert('Erro ao adicionar o ofício');
+    }
+}
+
+// Função para lidar com o clique no botão de editar ofício
+async function handleEditOficio(e) {
+    const button = e.target.closest('.edit-btn');
+    if (!button) return;
+    
+    const id = button.dataset.id;
+    try {
+        const response = await fetch(`${API_BASE_URL}/oficios`);
+        const data = await response.json();
+        // Verifica se data é um array (resposta direta) ou se está dentro de uma propriedade
+        const oficios = Array.isArray(data) ? data : (data.oficios || []);
+        const oficio = oficios.find(o => o.id === parseInt(id));
+        
+        if (oficio) {
+            document.getElementById('editOficioId').value = oficio.id;
+            document.getElementById('editNumOficio').value = oficio.NumOficio;
+            document.getElementById('editTituloOficio').value = oficio.titulo;
+            document.getElementById('editDescriptionOficio').value = oficio.description;
+            document.getElementById('editDataOficio').value = oficio.data.split('T')[0];
+            document.getElementById('editLinkOficio').value = oficio.link || '';
+
+            document.getElementById('editOficioModal').classList.add('active');
+            
+            // Adicionar event listener para o formulário de edição
+            const editForm = document.getElementById('editOficioForm');
+            editForm.removeEventListener('submit', handleEditOficioSubmit);
+            editForm.addEventListener('submit', handleEditOficioSubmit);
+            
+            // Adicionar event listeners para fechar o modal
+            const closeButtons = document.getElementById('editOficioModal')
+                .querySelectorAll('.modal-close, .btn-cancel');
+            closeButtons.forEach(button => {
+                button.addEventListener('click', closeEditOficioModal);
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar dados do ofício:', error);
+        alert('Erro ao carregar dados do ofício');
+    }
+}
+
+// Função para lidar com o submit do formulário de editar ofício
+async function handleEditOficioSubmit(e) {
+    e.preventDefault();
+    const id = document.getElementById('editOficioId').value;
+    
+    const oficioData = {
+        NumOficio: document.getElementById('editNumOficio').value,
+        titulo: document.getElementById('editTituloOficio').value,
+        description: document.getElementById('editDescriptionOficio').value,
+        data: document.getElementById('editDataOficio').value,
+        link: document.getElementById('editLinkOficio').value || null
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/oficios/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(oficioData)
+        });
+
+        if (response.ok) {
+            closeEditOficioModal();
+            carregarOficios();
+            alert('Ofício atualizado com sucesso!');
+        } else {
+            throw new Error('Erro ao atualizar ofício');
+        }
+    } catch (error) {
+        console.error('Erro ao atualizar ofício:', error);
+        alert('Erro ao atualizar o ofício');
+    }
+}
+
+// Função para lidar com o delete de ofício
+async function handleDeleteOficio(e) {
+    const button = e.target.closest('.delete-btn');
+    if (!button) return;
+    
+    if (confirm('Tem certeza que deseja excluir este ofício?')) {
+        const id = button.dataset.id;
+        try {
+            const response = await fetch(`${API_BASE_URL}/oficios/${id}`, {
+                method: 'DELETE'
+            });
+
+            if (response.ok) {
+                carregarOficios();
+                alert('Ofício excluído com sucesso!');
+            } else {
+                throw new Error('Erro ao excluir ofício');
+            }
+        } catch (error) {
+            console.error('Erro ao excluir ofício:', error);
+            alert('Erro ao excluir o ofício');
+        }
+    }
+}
+
+// Função para fechar o modal de adicionar ofício
+function closeAddOficioModal() {
+    document.getElementById('addOficioModal').classList.remove('active');
+    document.getElementById('addOficioForm').reset();
+}
+
+// Função para fechar o modal de editar ofício
+function closeEditOficioModal() {
+    document.getElementById('editOficioModal').classList.remove('active');
+    document.getElementById('editOficioForm').reset();
 }

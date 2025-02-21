@@ -34,6 +34,7 @@
             <button class="tab-button active" data-tab="leis">Leis</button>
             <button class="tab-button" data-tab="atas">Atas</button>
             <button class="tab-button" data-tab="resolucoes">Resoluções</button>
+            <button class="tab-button" data-tab="oficios">Ofícios</button>
         </nav>
 
         <main class="content">
@@ -149,6 +150,34 @@
                                 </tr>
                             </thead>
                             <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="oficios" class="tab-content">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h2>Lista de Ofícios</h2>
+                        <button id="addOficioBtn" class="add-button">
+                            <span>+</span> Adicionar Ofício
+                        </button>
+                    </div>
+                    <div class="table-responsive">
+                        <table id="oficiosTable" class="modern-table">
+                            <thead>
+                                <tr>
+                                    <th>Número do Ofício</th>
+                                    <th>Título</th>
+                                    <th>Descrição</th>
+                                    <th>Data</th>
+                                    <th>Link</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Dados serão inseridos aqui dinamicamente -->
+                            </tbody>
                         </table>
                     </div>
                 </div>
@@ -322,6 +351,79 @@
         </div>
     </div>
 
-    <script src="script.js" type="module"></script>
+    <!-- Modal de Adicionar Ofício -->
+    <div id="addOficioModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Adicionar Novo Ofício</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="addOficioForm">
+                <div class="form-group">
+                    <label for="addNumOficio">Número do Ofício</label>
+                    <input type="text" id="addNumOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="addTituloOficio">Título</label>
+                    <input type="text" id="addTituloOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="addDescriptionOficio">Descrição</label>
+                    <textarea id="addDescriptionOficio" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="addDataOficio">Data</label>
+                    <input type="date" id="addDataOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="addLinkOficio">Link</label>
+                    <input type="url" id="addLinkOficio">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-save">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Editar Ofício -->
+    <div id="editOficioModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Editar Ofício</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="editOficioForm">
+                <input type="hidden" id="editOficioId">
+                <div class="form-group">
+                    <label for="editNumOficio">Número do Ofício</label>
+                    <input type="text" id="editNumOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="editTituloOficio">Título</label>
+                    <input type="text" id="editTituloOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="editDescriptionOficio">Descrição</label>
+                    <textarea id="editDescriptionOficio" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="editDataOficio">Data</label>
+                    <input type="date" id="editDataOficio" required>
+                </div>
+                <div class="form-group">
+                    <label for="editLinkOficio">Link</label>
+                    <input type="url" id="editLinkOficio">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-save">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
 </body>
 </html>
