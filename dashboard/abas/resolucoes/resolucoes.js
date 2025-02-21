@@ -68,8 +68,10 @@ export function initResolucoesTab() {
                 body: JSON.stringify(formData)
             });
 
+            const data = await response.json();
+            
             if (!response.ok) {
-                throw new Error('Erro ao salvar resolução');
+                throw new Error(data.detail || 'Erro ao salvar resolução');
             }
 
             closeModal();
