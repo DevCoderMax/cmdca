@@ -7,6 +7,10 @@
     --text-color: #333333;
     --border-radius: 8px;
     --spacing: 20px;
+    --border-color: rgba(0, 0, 0, 0.1);
+    --background-color-light: rgba(0, 0, 0, 0.05);
+    --hover-color: rgba(0, 0, 0, 0.02);
+    --danger-color: #dc3545;
 }
 
 :root[data-theme="dark"] {
@@ -126,78 +130,143 @@ body {
     height: 20px;
 }
 
-/* Estilos da tabela */
+/* Estilos da tabela moderna */
 .table-container {
-    overflow-x: auto;
-    background-color: var(--card-background);
+    background: var(--card-background);
     border-radius: var(--border-radius);
+    padding: var(--spacing);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-top: var(--spacing);
 }
 
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.95em;
-}
-
-.data-table th,
-.data-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.data-table th {
-    background-color: var(--primary-color);
-    color: white;
-    font-weight: 500;
-    text-transform: uppercase;
-    font-size: 0.85em;
-    letter-spacing: 0.5px;
-}
-
-.data-table tr:hover {
-    background-color: rgba(33, 150, 243, 0.05);
-}
-
-.data-table td .actions {
+.table-header {
     display: flex;
-    gap: 8px;
-}
-
-.data-table td .btn {
-    padding: 6px 12px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9em;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    display: inline-flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 4px;
+    margin-bottom: var(--spacing);
 }
 
-.data-table td .btn-view {
+.add-button {
     background-color: var(--primary-color);
     color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background-color 0.3s;
 }
 
-.data-table td .btn-view:hover {
+.add-button:hover {
     background-color: var(--secondary-color);
 }
 
-/* Dark theme ajustments for table */
-:root[data-theme="dark"] .data-table td {
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+.table-responsive {
+    overflow-x: auto;
 }
 
-:root[data-theme="dark"] .data-table tr:hover {
-    background-color: rgba(255, 255, 255, 0.05);
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    table-layout: fixed;
 }
 
-/* Estilos do Modal */
+.modern-table th,
+.modern-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    vertical-align: middle;
+}
+
+.modern-table td:first-child {
+    white-space: normal;
+    line-height: 1.4;
+}
+
+.modern-table td:not(:first-child) {
+    white-space: nowrap;
+}
+
+.modern-table th:nth-child(1),
+.modern-table td:nth-child(1) {
+    width: auto;
+    min-width: 200px;
+}
+
+.modern-table th:nth-child(2),
+.modern-table td:nth-child(2),
+.modern-table th:nth-child(3),
+.modern-table td:nth-child(3),
+.modern-table th:nth-child(4),
+.modern-table td:nth-child(4) {
+    width: 120px;
+}
+
+.modern-table th:nth-child(5),
+.modern-table td:nth-child(5) {
+    width: 100px;
+}
+
+.modern-table th:nth-child(6),
+.modern-table td:nth-child(6) {
+    width: 85px;
+}
+
+.actions {
+    display: flex;
+    gap: 4px;
+    justify-content: flex-start;
+}
+
+.edit-btn,
+.delete-btn {
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+}
+
+.edit-btn svg,
+.delete-btn svg {
+    width: 16px;
+    height: 16px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.edit-btn {
+    background-color: var(--secondary-color);
+    color: white;
+}
+
+.delete-btn {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+.edit-btn:hover,
+.delete-btn:hover {
+    filter: brightness(110%);
+}
+
+.edit-btn:active,
+.delete-btn:active {
+    transform: scale(0.95);
+}
+
+/* Modal styles */
 .modal {
     display: none;
     position: fixed;
@@ -207,154 +276,85 @@ body {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    overflow-y: auto;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
 .modal-content {
     background-color: var(--card-background);
+    padding: var(--spacing);
     border-radius: var(--border-radius);
-    width: 90%;
-    max-width: 600px;
-    margin: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    position: relative;
 }
 
 .modal-header {
-    padding: 20px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: var(--spacing);
 }
 
-.modal-header h2 {
-    margin: 0;
-    color: var(--text-color);
-}
-
-.close-modal {
+.modal-close {
     background: none;
     border: none;
-    font-size: 24px;
+    font-size: 1.5em;
     cursor: pointer;
     color: var(--text-color);
-    opacity: 0.7;
 }
 
-.close-modal:hover {
-    opacity: 1;
-}
-
-/* Estilos do Formulário */
 .form-group {
-    margin-bottom: 20px;
-    padding: 0 20px;
+    margin-bottom: 15px;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
     color: var(--text-color);
-    font-weight: 500;
 }
 
-.form-group input {
+.form-group input,
+.form-group textarea {
     width: 100%;
-    padding: 10px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 8px;
+    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
     border-radius: 4px;
     background-color: var(--background-color);
     color: var(--text-color);
 }
 
-.form-group input:focus {
-    outline: none;
-    border-color: var(--primary-color);
+.form-group input[type="date"] {
+    font-family: inherit;
 }
 
-.modal-footer {
-    padding: 20px;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+.form-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+    margin-top: var(--spacing);
 }
 
-/* Botões */
-.btn {
-    padding: 8px 16px;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    font-size: 0.9em;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: all 0.2s ease;
-}
-
-.btn-primary {
+.btn-save {
     background-color: var(--primary-color);
     color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
-.btn-primary:hover {
-    background-color: var(--secondary-color);
-}
-
-.btn-secondary {
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
-
-.btn-secondary:hover {
-    background-color: rgba(0, 0, 0, 0.1);
-}
-
-.btn-edit {
-    background-color: #4caf50;
+.btn-cancel {
+    background-color: var(--danger-color, #dc3545);
     color: white;
-}
-
-.btn-edit:hover {
-    background-color: #388e3c;
-}
-
-/* Table Header */
-.table-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 0 15px;
-}
-
-.table-header h2 {
-    margin: 0;
-    color: var(--text-color);
-}
-
-/* Dark theme adjustments */
-:root[data-theme="dark"] .modal-content {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-:root[data-theme="dark"] .form-group input {
-    border-color: rgba(255, 255, 255, 0.1);
-}
-
-:root[data-theme="dark"] .btn-secondary {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-:root[data-theme="dark"] .btn-secondary:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 /* Responsividade */
