@@ -860,7 +860,7 @@ async function handleEditOficio(e) {
             document.getElementById('editDescriptionOficio').value = oficio.description;
             document.getElementById('editStatus').value = oficio.status || '';
             document.getElementById('editDataOficio').value = oficio.data ? oficio.data.split('T')[0] : '';
-            document.getElementById('editVisibilidade').value = oficio.visibilidade || '';
+            document.getElementById('editVisibilidade').value = oficio.visibilidade || 'public';
             document.getElementById('editLinkOficio').value = oficio.link || '';
 
             document.getElementById('editOficioModal').classList.add('active');
