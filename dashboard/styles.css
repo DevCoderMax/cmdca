@@ -11,6 +11,7 @@
     --background-color-light: rgba(0, 0, 0, 0.05);
     --hover-color: rgba(0, 0, 0, 0.02);
     --danger-color: #dc3545;
+    --input-background: #ffffff;
 }
 
 :root[data-theme="dark"] {
@@ -391,23 +392,27 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
     z-index: 1000;
-    justify-content: center;
-    align-items: center;
+    overflow-y: auto;
+    padding: 2rem;
 }
 
 .modal.active {
     display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
-    background-color: var(--card-background);
-    padding: var(--spacing);
-    border-radius: var(--border-radius);
-    width: 100%;
-    max-width: 500px;
+    max-width: 800px;
+    width: 90%;
+    background: var(--background-color);
+    padding: 2rem;
+    border-radius: 8px;
     position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 .modal-header {
@@ -426,34 +431,39 @@ body {
 }
 
 .form-group {
-    margin-bottom: 15px;
+    margin-bottom: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 0.5rem;
     color: var(--text-color);
+    font-weight: 500;
 }
 
 .form-group input,
 .form-group textarea {
     width: 100%;
-    padding: 8px;
-    border: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
     border-radius: 4px;
-    background-color: var(--background-color);
+    background: var(--input-background);
     color: var(--text-color);
 }
 
-.form-group input[type="date"] {
-    font-family: inherit;
+.form-group textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    gap: 10px;
-    margin-top: var(--spacing);
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
 .btn-save {
