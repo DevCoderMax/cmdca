@@ -805,11 +805,15 @@ async function handleAddOficioSubmit(e) {
     e.preventDefault();
     
     const oficioData = {
-        NumOficio: document.getElementById('addNumOficio').value,
+        origem: document.getElementById('addOrigem').value,
+        destino: document.getElementById('addDestino').value,
+        numOficio: document.getElementById('addNumOficio').value,
         titulo: document.getElementById('addTituloOficio').value,
         description: document.getElementById('addDescriptionOficio').value,
+        link: document.getElementById('addLinkOficio').value || null,
+        status: document.getElementById('addStatus').value,
         data: document.getElementById('addDataOficio').value,
-        link: document.getElementById('addLinkOficio').value || null
+        visibilidade: document.getElementById('addVisibilidade').value
     };
 
     try {
@@ -821,16 +825,17 @@ async function handleAddOficioSubmit(e) {
             body: JSON.stringify(oficioData)
         });
 
-        if (response.ok) {
-            closeAddOficioModal();
-            carregarOficios();
-            alert('Ofício adicionado com sucesso!');
-        } else {
+        if (!response.ok) {
             throw new Error('Erro ao adicionar ofício');
         }
+
+        const result = await response.json();
+        closeAddOficioModal();
+        carregarOficios();
+        alert('Ofício adicionado com sucesso!');
     } catch (error) {
         console.error('Erro ao adicionar ofício:', error);
-        alert('Erro ao adicionar o ofício');
+        alert('Erro ao adicionar ofício: ' + error.message);
     }
 }
 
@@ -848,10 +853,14 @@ async function handleEditOficio(e) {
         
         if (oficio) {
             document.getElementById('editOficioId').value = oficio.id;
-            document.getElementById('editNumOficio').value = oficio.NumOficio;
+            document.getElementById('editOrigem').value = oficio.origem || '';
+            document.getElementById('editDestino').value = oficio.destino || '';
+            document.getElementById('editNumOficio').value = oficio.numOficio;
             document.getElementById('editTituloOficio').value = oficio.titulo;
             document.getElementById('editDescriptionOficio').value = oficio.description;
-            document.getElementById('editDataOficio').value = oficio.data.split('T')[0];
+            document.getElementById('editStatus').value = oficio.status || '';
+            document.getElementById('editDataOficio').value = oficio.data ? oficio.data.split('T')[0] : '';
+            document.getElementById('editVisibilidade').value = oficio.visibilidade || '';
             document.getElementById('editLinkOficio').value = oficio.link || '';
 
             document.getElementById('editOficioModal').classList.add('active');
@@ -880,11 +889,15 @@ async function handleEditOficioSubmit(e) {
     const id = document.getElementById('editOficioId').value;
     
     const oficioData = {
-        NumOficio: document.getElementById('editNumOficio').value,
+        origem: document.getElementById('editOrigem').value,
+        destino: document.getElementById('editDestino').value,
+        numOficio: document.getElementById('editNumOficio').value,
         titulo: document.getElementById('editTituloOficio').value,
         description: document.getElementById('editDescriptionOficio').value,
+        link: document.getElementById('editLinkOficio').value || null,
+        status: document.getElementById('editStatus').value,
         data: document.getElementById('editDataOficio').value,
-        link: document.getElementById('editLinkOficio').value || null
+        visibilidade: document.getElementById('editVisibilidade').value
     };
 
     try {
@@ -896,16 +909,16 @@ async function handleEditOficioSubmit(e) {
             body: JSON.stringify(oficioData)
         });
 
-        if (response.ok) {
-            closeEditOficioModal();
-            carregarOficios();
-            alert('Ofício atualizado com sucesso!');
-        } else {
+        if (!response.ok) {
             throw new Error('Erro ao atualizar ofício');
         }
+
+        closeEditOficioModal();
+        carregarOficios();
+        alert('Ofício atualizado com sucesso!');
     } catch (error) {
         console.error('Erro ao atualizar ofício:', error);
-        alert('Erro ao atualizar o ofício');
+        alert('Erro ao atualizar ofício: ' + error.message);
     }
 }
 
