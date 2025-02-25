@@ -1,10 +1,4 @@
-import { API_BASE_URL, CONFIG_VERSION, checkConfigVersion } from './config.js';
-
-// Verificar atualizações de configuração
-if (checkConfigVersion()) {
-    console.log('Nova versão de configuração detectada:', CONFIG_VERSION);
-    window.location.reload(true);
-}
+import { API_BASE_URL } from './config.js';
 
 // Configuração do tema
 document.addEventListener('DOMContentLoaded', () => {
@@ -40,39 +34,39 @@ document.addEventListener('DOMContentLoaded', () => {
         updateThemeIcon(newTheme);
     });
 
-    // Seleção de elementos
+    // Gerenciamento das abas
     const tabButtons = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
-    
-    // Função para trocar de aba
-    function switchTab(tabId) {
-        // Remove classe active de todas as abas
-        tabButtons.forEach(button => button.classList.remove('active'));
-        tabContents.forEach(content => content.classList.remove('active'));
 
-        // Adiciona classe active na aba selecionada
-        document.querySelector(`[data-tab="${tabId}"]`).classList.add('active');
-        document.querySelector(`#${tabId}`).classList.add('active');
-    }
-
-    // Event listeners para os botões das abas
     tabButtons.forEach(button => {
         button.addEventListener('click', () => {
+            // Remove active class from all buttons and contents
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            // Add active class to clicked button and corresponding content
+            button.classList.add('active');
             const tabId = button.getAttribute('data-tab');
-            switchTab(tabId);
+            document.getElementById(`${tabId}-content`).classList.add('active');
         });
     });
 
-    // Inicializa a funcionalidade das leis
-    initLeis();
+    // Função para carregar leis.html content
+    function carregarLeis() {
+        fetch('leis.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('leis-content').innerHTML = data;
+                initLeis(); // Initialize event listeners after content is loaded
+            })
+            .catch(error => console.error('Error loading leis.html:', error));
+    }
 
-    // Inicializa a funcionalidade das atas
+    // Initialize the dashboard
+    carregarLeis();
+    // Initialize other sections
     initAtas();
-
-    // Inicializa a funcionalidade das resoluções
     initResolucoes();
-
-    // Inicializa a funcionalidade dos ofícios
     initOficios();
 });
 
@@ -751,23 +745,25 @@ async function carregarOficios() {
     try {
         const response = await fetch(`${API_BASE_URL}/oficios`);
         const data = await response.json();
+        const oficios = data.oficios;
         const tbody = document.querySelector('#oficiosTable tbody');
         tbody.innerHTML = '';
-
-        // Verifica se data é um array (resposta direta) ou se está dentro de uma propriedade
-        const oficios = Array.isArray(data) ? data : (data.oficios || []);
 
         oficios.forEach(oficio => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td data-label="Número">${oficio.NumOficio}</td>
-                <td data-label="Título">${oficio.titulo}</td>
-                <td data-label="Descrição">${oficio.description}</td>
-                <td data-label="Data">${new Date(oficio.data + 'T00:00:00').toLocaleDateString('pt-BR')}</td>
-                <td data-label="Link">
+                <td>${oficio.numOficio}</td>
+                <td>${oficio.origem}</td>
+                <td>${oficio.destino}</td>
+                <td>${oficio.titulo}</td>
+                <td>${oficio.description}</td>
+                <td>${oficio.status}</td>
+                <td>${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
+                <td>${oficio.visibilidade}</td>
+                <td>
                     ${oficio.link ? `<a href="${oficio.link}" target="_blank" class="table-link">Visualizar</a>` : '-'}
                 </td>
-                <td data-label="Ações" class="actions">
+                <td class="actions">
                     <button class="edit-btn oficio-edit" data-id="${oficio.id}" title="Editar">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                             <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -847,8 +843,7 @@ async function handleEditOficio(e) {
     try {
         const response = await fetch(`${API_BASE_URL}/oficios`);
         const data = await response.json();
-        // Verifica se data é um array (resposta direta) ou se está dentro de uma propriedade
-        const oficios = Array.isArray(data) ? data : (data.oficios || []);
+        const oficios = data.oficios;
         const oficio = oficios.find(o => o.id === parseInt(id));
         
         if (oficio) {

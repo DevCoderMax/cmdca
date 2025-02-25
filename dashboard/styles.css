@@ -87,10 +87,6 @@ body {
 
 .tab-content {
     display: none;
-    background-color: var(--card-background);
-    padding: var(--spacing);
-    border-radius: var(--border-radius);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .tab-content.active {
