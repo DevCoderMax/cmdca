@@ -176,6 +176,9 @@ body {
     text-align: left;
     border-bottom: 1px solid var(--border-color, rgba(0, 0, 0, 0.1));
     vertical-align: middle;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .modern-table td:first-child {
@@ -300,6 +303,44 @@ body {
     min-width: 100px;
 }
 
+#oficiosTable td {
+    height: auto;
+    min-height: 60px;
+    padding: 12px;
+    position: relative;
+}
+
+#oficiosTable td.truncate {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#oficiosTable td[data-label="Descrição"] {
+    max-width: 250px;
+}
+
+#oficiosTable td[data-label="Título"] {
+    max-width: 200px;
+}
+
+#oficiosTable .view-details-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    margin-left: 8px;
+    transition: background-color 0.3s;
+}
+
+#oficiosTable .view-details-btn:hover {
+    background-color: var(--secondary-color);
+}
+
 /* Ajuste para o texto na coluna de descrição */
 #oficiosTable td:nth-child(3) {
     white-space: normal;
@@ -381,6 +422,15 @@ body {
     /* Espaçamento entre os cards no mobile */
     #oficiosTable tbody tr + tr {
         margin-top: 1rem;
+    }
+
+    #oficiosTable td {
+        min-height: 60px;
+        padding: 12px 8px;
+    }
+    
+    #oficiosTable td[data-label="Descrição"] {
+        min-height: 80px;
     }
 }
 
@@ -522,4 +572,101 @@ body {
     .card-container {
         grid-template-columns: 1fr;
     }
+}
+
+/* Modal de Detalhes do Ofício */
+.oficio-details-modal .modal-content {
+    max-width: 800px;
+    width: 90%;
+}
+
+.oficio-details-modal .detail-row {
+    margin-bottom: 16px;
+}
+
+.oficio-details-modal .detail-label {
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+}
+
+.oficio-details-modal .detail-value {
+    padding: 8px;
+    background-color: var(--background-color-light);
+    border-radius: 4px;
+    white-space: pre-wrap;
+}
+
+/* Estilos para o container de descrição */
+.description-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.truncated-text {
+    flex: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Estilos para o botão Ver mais */
+.view-details-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.85em;
+    white-space: nowrap;
+    transition: background-color 0.3s;
+}
+
+.view-details-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+/* Estilos para o modal de detalhes */
+.oficio-details-modal .modal-content {
+    max-width: 800px;
+    width: 90%;
+}
+
+.oficio-details-modal .modal-body {
+    padding: 20px;
+}
+
+.oficio-details-modal .detail-row {
+    margin-bottom: 16px;
+}
+
+.oficio-details-modal .detail-label {
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 4px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+}
+
+.oficio-details-modal .detail-value {
+    padding: 8px 12px;
+    background-color: var(--background-color-light);
+    border-radius: 4px;
+    line-height: 1.5;
+}
+
+.oficio-details-modal #detailDescricao {
+    white-space: pre-wrap;
+    min-height: 100px;
+}
+
+.oficio-details-modal #detailLink {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.oficio-details-modal #detailLink:hover {
+    text-decoration: underline;
 }

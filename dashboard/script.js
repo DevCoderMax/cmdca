@@ -745,22 +745,28 @@ async function carregarOficios() {
     try {
         const response = await fetch(`${API_BASE_URL}/oficios`);
         const data = await response.json();
-        const oficios = data.oficios;
+        // Garantir que temos um array de ofícios
+        const oficios = Array.isArray(data) ? data : (data.oficios || []);
         const tbody = document.querySelector('#oficiosTable tbody');
         tbody.innerHTML = '';
 
         oficios.forEach(oficio => {
             const row = document.createElement('tr');
             row.innerHTML = `
-                <td>${oficio.numOficio}</td>
-                <td>${oficio.origem}</td>
-                <td>${oficio.destino}</td>
-                <td>${oficio.titulo}</td>
-                <td>${oficio.description}</td>
-                <td>${oficio.status}</td>
-                <td>${new Date(oficio.data).toLocaleDateString('pt-BR')}</td>
-                <td>${oficio.visibilidade}</td>
-                <td>
+                <td class="truncate" data-label="Número">${oficio.numOficio || oficio.numero || ''}</td>
+                <td class="truncate" data-label="Origem">${oficio.origem || ''}</td>
+                <td class="truncate" data-label="Destino">${oficio.destino || ''}</td>
+                <td class="truncate" data-label="Título">${oficio.titulo || ''}</td>
+                <td class="truncate" data-label="Descrição">
+                    <div class="description-container">
+                        <span class="truncated-text">${oficio.descricao || oficio.description || ''}</span>
+                        <button class="view-details-btn" data-id="${oficio.id}">Ver mais</button>
+                    </div>
+                </td>
+                <td class="truncate" data-label="Status">${oficio.status || ''}</td>
+                <td data-label="Data">${oficio.data ? new Date(oficio.data).toLocaleDateString('pt-BR') : ''}</td>
+                <td data-label="Visibilidade">${oficio.visibilidade === 'public' ? 'Público' : 'Privado'}</td>
+                <td data-label="Link">
                     ${oficio.link ? `<a href="${oficio.link}" target="_blank" class="table-link">Visualizar</a>` : '-'}
                 </td>
                 <td class="actions">
@@ -782,6 +788,12 @@ async function carregarOficios() {
             tbody.appendChild(row);
         });
 
+        // Adicionar event listeners para os botões de detalhes
+        document.querySelectorAll('.view-details-btn').forEach(btn => {
+            btn.addEventListener('click', handleViewDetails);
+        });
+
+        // Adicionar event listeners para os outros botões
         setupOficioEventListeners();
     } catch (error) {
         console.error('Erro ao carregar ofícios:', error);
@@ -809,7 +821,7 @@ async function handleAddOficioSubmit(e) {
         destino: document.getElementById('addDestino').value,
         numOficio: document.getElementById('addNumOficio').value,
         titulo: document.getElementById('addTituloOficio').value,
-        description: document.getElementById('addDescriptionOficio').value,
+        descricao: document.getElementById('addDescricaoOficio').value,
         link: document.getElementById('addLinkOficio').value || null,
         status: document.getElementById('addStatus').value,
         data: document.getElementById('addDataOficio').value,
@@ -857,7 +869,7 @@ async function handleEditOficio(e) {
             document.getElementById('editDestino').value = oficio.destino || '';
             document.getElementById('editNumOficio').value = oficio.numOficio;
             document.getElementById('editTituloOficio').value = oficio.titulo;
-            document.getElementById('editDescriptionOficio').value = oficio.description;
+            document.getElementById('editDescricaoOficio').value = oficio.descricao;
             document.getElementById('editStatus').value = oficio.status || '';
             document.getElementById('editDataOficio').value = oficio.data ? oficio.data.split('T')[0] : '';
             document.getElementById('editVisibilidade').value = oficio.visibilidade || 'public';
@@ -893,7 +905,7 @@ async function handleEditOficioSubmit(e) {
         destino: document.getElementById('editDestino').value,
         numOficio: document.getElementById('editNumOficio').value,
         titulo: document.getElementById('editTituloOficio').value,
-        description: document.getElementById('editDescriptionOficio').value,
+        descricao: document.getElementById('editDescricaoOficio').value,
         link: document.getElementById('editLinkOficio').value || null,
         status: document.getElementById('editStatus').value,
         data: document.getElementById('editDataOficio').value,
@@ -957,4 +969,52 @@ function closeAddOficioModal() {
 function closeEditOficioModal() {
     document.getElementById('editOficioModal').classList.remove('active');
     document.getElementById('editOficioForm').reset();
+}
+
+// Função para lidar com a visualização de detalhes
+async function handleViewDetails(e) {
+    const button = e.target;
+    const id = button.dataset.id;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/oficios`);
+        const oficios = await response.json();
+        const oficio = oficios.find(o => o.id === parseInt(id));
+        
+        if (oficio) {
+            // Preencher o modal com os detalhes
+            document.getElementById('detailNumOficio').textContent = oficio.numOficio || oficio.numero || '';
+            document.getElementById('detailOrigem').textContent = oficio.origem || '';
+            document.getElementById('detailDestino').textContent = oficio.destino || '';
+            document.getElementById('detailTitulo').textContent = oficio.titulo || '';
+            document.getElementById('detailDescricao').textContent = oficio.descricao || oficio.description || '';
+            document.getElementById('detailStatus').textContent = oficio.status || '';
+            document.getElementById('detailData').textContent = oficio.data ? new Date(oficio.data).toLocaleDateString('pt-BR') : '';
+            document.getElementById('detailVisibilidade').textContent = oficio.visibilidade === 'public' ? 'Público' : 'Privado';
+            
+            const linkElement = document.getElementById('detailLink');
+            if (oficio.link) {
+                linkElement.href = oficio.link;
+                linkElement.textContent = 'Abrir documento';
+                linkElement.style.display = 'inline';
+            } else {
+                linkElement.textContent = 'Nenhum link disponível';
+                linkElement.removeAttribute('href');
+                linkElement.style.display = 'none';
+            }
+
+            // Abrir o modal
+            const modal = document.getElementById('viewOficioDetailsModal');
+            modal.classList.add('active');
+
+            // Adicionar evento para fechar o modal
+            const closeBtn = modal.querySelector('.modal-close');
+            closeBtn.addEventListener('click', () => {
+                modal.classList.remove('active');
+            });
+        }
+    } catch (error) {
+        console.error('Erro ao carregar detalhes do ofício:', error);
+        alert('Erro ao carregar detalhes do ofício');
+    }
 }
